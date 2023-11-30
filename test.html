@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Statistics Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #chart-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Payment Statistics Dashboard</h1>
+    <div id="stats-container">
+        <!-- Display statistics here -->
+    </div>
+    <div id="chart-container">
+        <canvas id="payment-chart"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Sample data (replace with your actual data)
+        const monthlyData = [500, 800, 1200, 600, 900, 1500, 1000, 1300, 700, 1100, 1700, 1200];
+        const annualData = [6000, 9000, 11000, 8000, 12000, 15000, 14000, 16000, 10000, 13000, 18000, 16000];
+
+        // Display statistics
+        const statsContainer = document.getElementById('stats-container');
+        statsContainer.innerHTML = `
+                <p>Monthly Earnings: $${calculateTotal(monthlyData)}</p>
+                <p>Annual Earnings: $${calculateTotal(annualData)}</p>
+            `;
+
+        // Create chart
+        const ctx = document.getElementById('payment-chart').getContext('2d');
+        const paymentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: getMonthLabels(),
+                datasets: [
+                    {
+                        label: 'Monthly Earnings',
+                        borderColor: 'blue',
+                        data: monthlyData,
+                    },
+                    {
+                        label: 'Annual Earnings',
+                        borderColor: 'green',
+                        data: annualData,
+                    },
+                ],
+            },
+        });
+    });
+
+    // Function to calculate total earnings
+    function calculateTotal(data) {
+        return data.reduce((total, amount) => total + amount, 0);
+    }
+
+    // Function to get month labels
+    function getMonthLabels() {
+        return [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+    }
+</script>
+</body>
+</html>

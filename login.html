@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+
+<body class="login-body">
+    <div class="header">
+        <h2>Admin Login</h2>
+    </div>
+    <div class="login-column">
+        <img src="assets/images/applogo.jpeg" alt="logo" class="logo-login" />
+        <div class="login-container">
+            <p id="message" class="message"></p>
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="button" id="logbtn">Login</button>
+                <div id="loading" class="loading"></div>
+            </form>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBjVQ4qjUUO42eqPL_gPkDU_DDuhT9_4ms",
+            authDomain: "m2chanic.firebaseapp.com",
+            projectId: "m2chanic",
+            storageBucket: "m2chanic.appspot.com",
+            messagingSenderId: "905844914008",
+            appId: "1:905844914008:web:9f027ce3dfc2c142da572d",
+            measurementId: "G-5WYG8GY8SS"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        function login() {
+            var email = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            var messageElement = document.getElementById('message');
+            var logBtn = document.getElementById('logbtn');
+            var loading = document.getElementById('loading');
+            messageElement.style.display = 'none';
+            logBtn.style.display = 'none';
+            loading.style.display = 'block';
+            if(email.includes('admin')) {
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Signed in
+                        var user = userCredential.user;
+                        var userData = {
+                            accessToken: user.accessToken,
+                            uid: user.uid,
+                            email: user.email
+                            // Add any other relevant user data here
+                        };
+                        console.log("User logged in: ", user['accessToken']);
+                        localStorage.setItem('currentUser', JSON.stringify(userData));
+                        window.location.href = 'index.php';
+                        logBtn.style.display = 'block';
+                        loading.style.display = 'none';
+                        // Add your logic here for successful login
+                    })
+                    .catch((error) => {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        console.log("Login error: " + errorMessage);
+                        messageElement.innerText = 'wrong email  or password';
+                        messageElement.style.display = 'block';
+                        logBtn.style.display = 'block';
+                        loading.style.display = 'none';
+                        // Add your logic here for handling login errors
+                    });
+            }else {
+                alert("This User Not Admin");
+                logBtn.style.display = 'block';
+                loading.style.display = 'none';
+            }
+        }
+        document.getElementById('logbtn').addEventListener('click', function () {
+            login();
+        });
+
+
+    </script>
+</body>
+
+</html>
